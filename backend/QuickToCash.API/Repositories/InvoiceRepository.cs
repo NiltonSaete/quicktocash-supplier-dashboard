@@ -28,7 +28,7 @@ namespace QuickToCash.API.Repositories
                 {
                     InvoiceId = "inv-002",
                     InvoiceNumber = "INV-2026-002",
-                    SupplierName = "Acme Supplies",
+                    SupplierName = "Cema Supplies",
                     SupplierId = "sup-001",
                     Amount = 120000,
                     SubmittedDate = DateTime.Now.AddDays(-10),
@@ -39,7 +39,7 @@ namespace QuickToCash.API.Repositories
                 {
                     InvoiceId = "inv-003",
                     InvoiceNumber = "INV-2026-003",
-                    SupplierName = "Acme Supplies",
+                    SupplierName = "Meca Supplies",
                     SupplierId = "sup-001",
                     Amount = 75000,
                     SubmittedDate = DateTime.Now.AddDays(-5),
@@ -50,7 +50,7 @@ namespace QuickToCash.API.Repositories
                 {
                     InvoiceId = "inv-004",
                     InvoiceNumber = "INV-2026-004",
-                    SupplierName = "Acme Supplies",
+                    SupplierName = "Amec Supplies",
                     SupplierId = "sup-001",
                     Amount = 30000,
                     SubmittedDate = DateTime.Now.AddDays(-30),
