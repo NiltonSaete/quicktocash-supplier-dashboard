@@ -106,3 +106,7 @@ C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\obj\Debug\net10.0\QuickToCash.Tests.pdb
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\obj\Debug\net10.0\QuickToCash.Tests.genruntimeconfig.cache
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\obj\Debug\net10.0\ref\QuickToCash.Tests.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\bin\Debug\net10.0\Castle.Core.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\bin\Debug\net10.0\Moq.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\bin\Debug\net10.0\Scalar.AspNetCore.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.Tests\obj\Debug\net10.0\QuickToCash.Tests.sourcelink.json

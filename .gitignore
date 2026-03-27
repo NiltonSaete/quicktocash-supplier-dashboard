@@ -1,11 +1,24 @@
-# .gitignore for .NET and Angular project
+# .gitignore for .NET and Frontend project (Angular/React/Node.js)
 
-## .NET Core
+## .NET Core / Visual Studio
 [Bb]in/
 [Oo]bj/
+[Tt]est[Rr]esults/
 *.user
 *.userosscache
 *.sln.docstates
+*.suo
+.vs/
+.idea/
+.vs-code/
+*.userprefs
+*.dbmdl
+*.jfm
+*.sln.docstates
+*.slnx.user
+*.sln.user
+*.slnx.view
+_ReSharper*/
 
 # Visual Studio Code
 .vscode/
@@ -13,39 +26,52 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# Visual Studio
-.vs/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+!.vscode/snippets/
 
 # Rider
 .idea/
+*.sln.iml
+.fleet/
 
-## Node.js / Angular
+## Node.js / Frontend
 node_modules/
 dist/
+build/
 .angular/
 .npm/
+.next/
+.serverless/
+.cache/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.pnpm-lock.yaml
+coverage/
+.nyc_output
 
-# Environment files
+## Environment and Secrets
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p1x
+*.pfx
+*.p12
 
-# OS files
+## OS and Editor files
 .DS_Store
 Thumbs.db
-
-# Misc
+desktop.ini
 *.swp
 *.bak
 *.tmp
+*.log
+.history/
+.local-history/
+
+## Project specific
+/backend/test_output.txt
 temp/
 /tmp/

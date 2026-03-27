@@ -53,7 +53,7 @@ namespace QuickToCash.API.Services
                     Reason = "Invoice has already been funded."
                 };
 
-            var daysUntilDue = (invoice.DueDate - DateTime.Now).Days;
+            var daysUntilDue = (invoice.DueDate.Date - DateTime.Today).Days;
 
             if (daysUntilDue <= 5)
                 return new EarlyPaymentEligibilityResult

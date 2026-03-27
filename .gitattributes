@@ -1,0 +1,21 @@
+# Enforce LF for all text files (recommended for cross-platform)
+* text=auto eol=lf
+
+# Explicitly declare files that should always have LF
+*.cs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.csproj text eol=lf
+*.sln text eol=lf
+*.slnx text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
