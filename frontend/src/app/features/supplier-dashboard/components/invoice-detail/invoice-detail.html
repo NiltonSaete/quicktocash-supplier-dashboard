@@ -1,1 +1,103 @@
-<p>invoice-detail works!</p>
+<div class="overlay" (click)="close.emit()"></div>
+
+<div class="panel">
+  <div class="panel-header">
+    <h2>Invoice Details</h2>
+    <button mat-icon-button (click)="close.emit()">✕</button>
+  </div>
+
+  <mat-divider />
+
+  <!-- Invoice Info -->
+  <div class="detail-section">
+    <div class="detail-row">
+      <span class="label">Invoice Number</span>
+      <span>{{ invoice.invoiceNumber }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Supplier</span>
+      <span>{{ invoice.supplierName }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Amount</span>
+      <span>MZN {{ invoice.amount | number:'1.2-2' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Submitted</span>
+      <span>{{ invoice.submittedDate | date:'mediumDate' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Due Date</span>
+      <span>{{ invoice.dueDate | date:'mediumDate' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Status</span>
+      <span class="badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
+    </div>
+  </div>
+
+  <mat-divider />
+
+  <!-- Eligibility Section -->
+  <div class="detail-section">
+    <h3>Early Payment Eligibility</h3>
+
+    <div *ngIf="isLoadingEligibility" class="center">
+      <mat-spinner diameter="32" />
+    </div>
+
+    <div *ngIf="!isLoadingEligibility && eligibility">
+
+      <div *ngIf="!eligibility.isEligible" class="ineligible-msg">
+        ⚠ {{ eligibility.reason }}
+      </div>
+
+      <div *ngIf="eligibility.isEligible">
+        <div class="detail-row">
+          <span class="label">Days Early</span>
+          <span>{{ eligibility.earlyByDays }} days</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Fee</span>
+          <span>MZN {{ eligibility.fee | number:'1.2-2' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">You Will Receive</span>
+          <span class="amount-highlight">MZN {{ eligibility.disbursementAmount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="submitSuccess" class="success-msg">
+    ✓ Early payment request submitted successfully.
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="submitError" class="error-msg">
+    ✕ {{ submitError }}
+  </div>
+
+  <!-- Confirmation Step -->
+  <div *ngIf="showConfirmation" class="confirmation-box">
+    <p>You will receive <strong>MZN {{ eligibility?.disbursementAmount | number:'1.2-2' }}</strong> after a fee of <strong>MZN {{ eligibility?.fee | number:'1.2-2' }}</strong>. Confirm?</p>
+    <div class="confirm-actions">
+      <button mat-stroked-button (click)="cancelConfirmation()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="confirmRequest()" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Submitting...' : 'Confirm' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Request Button -->
+  <div class="panel-footer" *ngIf="!submitSuccess && !showConfirmation">
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!eligibility?.isEligible"
+      (click)="requestEarlyPayment()">
+      Request Early Payment
+    </button>
+  </div>
+</div>

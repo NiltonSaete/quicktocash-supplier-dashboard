@@ -1,0 +1,72 @@
+.dashboard-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #1a1a2e;
+}
+
+.summary-strip {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+
+  &.active {
+    background: #1565c0;
+    color: white;
+    border-color: #1565c0;
+  }
+
+  &:hover:not(.active) {
+    background: #f0f4ff;
+  }
+}
+
+.search-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.invoice-table {
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.pending  { background: #fff3e0; color: #e65100; }
+  &.approved { background: #e3f2fd; color: #1565c0; }
+  &.funded   { background: #e8f5e9; color: #2e7d32; }
+  &.rejected { background: #fce4ec; color: #c62828; }
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error { color: #c62828; }
+.empty { color: #757575; }

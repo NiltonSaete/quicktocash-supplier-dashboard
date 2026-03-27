@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { Invoice, InvoiceStatus } from '../../models/invoice.model';
 import { InvoiceService } from '../../services/invoice.service';
-import { InvoiceDetail } from '../invoice-detail/invoice-detail';
+import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +25,7 @@ import { InvoiceDetail } from '../invoice-detail/invoice-detail';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    InvoiceDetail
+    InvoiceDetailComponent
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
