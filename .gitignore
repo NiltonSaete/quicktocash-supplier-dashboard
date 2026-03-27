@@ -9,7 +9,6 @@
 *.sln.docstates
 *.suo
 .vs/
-.idea/
 .vs-code/
 *.userprefs
 *.dbmdl
@@ -19,6 +18,13 @@
 *.sln.user
 *.slnx.view
 _ReSharper*/
+# Managed by .NET Core locally
+appsettings.Development.json
+appsettings.Local.json
+*.local.json
+.microsoft/usersecrets/
+# Local test results
+/backend/test_output.txt
 
 # Visual Studio Code
 .vscode/
@@ -47,8 +53,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .pnpm-lock.yaml
+pnpm-lock.yaml
 coverage/
 .nyc_output
+/frontend/out-tsc/
+/frontend/bazel-out/
+/frontend/connect.lock
+/frontend/libpeerconnection.log
+/frontend/testem.log
+/frontend/typings
+/__screenshots__/
 
 ## Environment and Secrets
 .env
@@ -71,7 +85,13 @@ desktop.ini
 .history/
 .local-history/
 
+## Antigravity / Gemini
+.gemini/
+.antigravity/
+
 ## Project specific
-/backend/test_output.txt
 temp/
 /tmp/
+*.log
+*.bak
+*.tmp

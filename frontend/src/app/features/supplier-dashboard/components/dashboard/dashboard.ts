@@ -25,10 +25,10 @@ import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    InvoiceDetailComponent
+    InvoiceDetailComponent,
   ],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrl: './dashboard.scss',
 })
 export class DashboardComponent implements OnInit {
   allInvoices: Invoice[] = [];
@@ -38,7 +38,15 @@ export class DashboardComponent implements OnInit {
   hasError = false;
   searchTerm = '';
   activeFilter = 'All';
-  displayedColumns = ['invoiceNumber', 'supplierName', 'amount', 'submittedDate', 'dueDate', 'status', 'actions'];
+  displayedColumns = [
+    'invoiceNumber',
+    'supplierName',
+    'amount',
+    'submittedDate',
+    'dueDate',
+    'status',
+    'actions',
+  ];
   filters = ['All', 'Pending', 'Approved', 'Funded', 'Rejected'];
 
   constructor(private invoiceService: InvoiceService) {}
@@ -46,29 +54,31 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.invoiceService.getInvoices('sup-001').subscribe({
       next: (invoices) => {
+        console.log('invoices received:', invoices);
         this.allInvoices = invoices;
         this.applyFilter();
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.log('error:', err);
         this.hasError = true;
         this.isLoading = false;
-      }
+      },
     });
   }
-
   applyFilter(): void {
     let result = [...this.allInvoices];
 
     if (this.activeFilter !== 'All') {
-      result = result.filter(i => i.status === this.activeFilter);
+      result = result.filter((i) => i.status === this.activeFilter);
     }
 
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      result = result.filter(i =>
-        i.invoiceNumber.toLowerCase().includes(term) ||
-        i.supplierName.toLowerCase().includes(term)
+      result = result.filter(
+        (i) =>
+          i.invoiceNumber.toLowerCase().includes(term) ||
+          i.supplierName.toLowerCase().includes(term),
       );
     }
 
@@ -82,7 +92,7 @@ export class DashboardComponent implements OnInit {
 
   getCount(filter: string): number {
     if (filter === 'All') return this.allInvoices.length;
-    return this.allInvoices.filter(i => i.status === filter).length;
+    return this.allInvoices.filter((i) => i.status === filter).length;
   }
 
   selectInvoice(invoice: Invoice): void {
