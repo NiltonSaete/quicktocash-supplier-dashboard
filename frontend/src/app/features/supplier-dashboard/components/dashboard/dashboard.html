@@ -1,1 +1,89 @@
 <p>dashboard works!</p>
+<div class="dashboard-container">
+  <h1 class="dashboard-title">Supplier Dashboard</h1>
+
+  <!-- Summary Strip -->
+  <div class="summary-strip">
+    <button
+      *ngFor="let filter of filters"
+      [class.active]="activeFilter === filter"
+      (click)="setFilter(filter)"
+      class="filter-btn">
+      {{ filter }} ({{ getCount(filter) }})
+    </button>
+  </div>
+
+  <!-- Search -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search by invoice number or supplier</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" />
+  </mat-form-field>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="center">
+    <mat-spinner diameter="48" />
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="hasError" class="center error">
+    Failed to load invoices. Please check the API is running.
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && !hasError && filteredInvoices.length === 0" class="center empty">
+    No invoices match your current filter.
+  </div>
+
+  <!-- Table -->
+  <table mat-table [dataSource]="filteredInvoices" *ngIf="!isLoading && !hasError && filteredInvoices.length > 0" class="invoice-table">
+
+    <ng-container matColumnDef="invoiceNumber">
+      <th mat-header-cell *matHeaderCellDef>Invoice No</th>
+      <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="supplierName">
+      <th mat-header-cell *matHeaderCellDef>Supplier</th>
+      <td mat-cell *matCellDef="let row">{{ row.supplierName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let row">MZN {{ row.amount | number:'1.2-2' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="submittedDate">
+      <th mat-header-cell *matHeaderCellDef>Submitted</th>
+      <td mat-cell *matCellDef="let row">{{ row.submittedDate | date:'mediumDate' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dueDate">
+      <th mat-header-cell *matHeaderCellDef>Due Date</th>
+      <td mat-cell *matCellDef="let row">{{ row.dueDate | date:'mediumDate' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="badge" [ngClass]="row.status.toLowerCase()">{{ row.status }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-button color="primary" (click)="selectInvoice(row)">View</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
+<!-- Invoice Detail Panel -->
+<app-invoice-detail
+  *ngIf="selectedInvoice"
+  [invoice]="selectedInvoice"
+  (close)="closeDetail()">
+</app-invoice-detail>
