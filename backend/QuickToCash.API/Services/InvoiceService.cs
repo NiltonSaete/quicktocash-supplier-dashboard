@@ -92,5 +92,8 @@ namespace QuickToCash.API.Services
             _repository.AddEarlyPaymentRequest(request);
             return request;
         }
+
+        public EarlyPaymentRequest? GetEarlyPaymentRequestByInvoiceId(string invoiceId) =>
+    _repository.GetEarlyPaymentRequestByInvoiceId(invoiceId);
     }
 }

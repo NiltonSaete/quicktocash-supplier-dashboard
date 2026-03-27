@@ -9,5 +9,6 @@ namespace QuickToCash.API.Services.Interfaces
         Invoice? GetInvoiceById(string invoiceId);
         EarlyPaymentEligibilityResult CheckEligibility(string invoiceId);
         EarlyPaymentRequest SubmitEarlyPaymentRequest(string invoiceId);
+        EarlyPaymentRequest? GetEarlyPaymentRequestByInvoiceId(string invoiceId);
     }
 }

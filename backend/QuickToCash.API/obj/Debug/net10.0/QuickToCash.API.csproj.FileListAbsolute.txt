@@ -31,3 +31,5 @@ C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\obj\Debug\net10.0\QuickToCash.API.pdb
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\obj\Debug\net10.0\QuickToCash.API.genruntimeconfig.cache
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\obj\Debug\net10.0\ref\QuickToCash.API.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\obj\Debug\net10.0\QuickToCash.API.sourcelink.json
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\bin\Debug\net10.0\Scalar.AspNetCore.dll
