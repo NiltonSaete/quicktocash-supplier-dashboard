@@ -28,15 +28,31 @@ import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail';
     InvoiceDetailComponent,
   ],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss',
+  styleUrls: ['./dashboard.scss'],
 })
 export class DashboardComponent implements OnInit {
+  readonly filters = ['All', 'Pending', 'Approved', 'Funded', 'Rejected'];
+  readonly filterLabels: Record<string, string> = {
+    All: 'All',
+    Pending: 'Pending',
+    Approved: 'Approved',
+    Funded: 'Funded',
+    Rejected: 'Rejected',
+  };
+  readonly statusLabels: Record<InvoiceStatus, string> = {
+    [InvoiceStatus.Pending]: 'Pending',
+    [InvoiceStatus.Approved]: 'Approved',
+    [InvoiceStatus.Funded]: 'Funded',
+    [InvoiceStatus.Rejected]: 'Rejected',
+  };
+
   allInvoices: Invoice[] = [];
   filteredInvoices: Invoice[] = [];
   selectedInvoice: Invoice | null = null;
   isLoading = true;
   hasError = false;
   searchTerm = '';
+  showFilters = true;
   activeFilter = 'All';
   displayedColumns = [
     'invoiceNumber',
@@ -47,20 +63,17 @@ export class DashboardComponent implements OnInit {
     'status',
     'actions',
   ];
-  filters = ['All', 'Pending', 'Approved', 'Funded', 'Rejected'];
 
   constructor(private invoiceService: InvoiceService) {}
 
   ngOnInit(): void {
     this.invoiceService.getInvoices('sup-001').subscribe({
       next: (invoices) => {
-        console.log('invoices received:', invoices);
         this.allInvoices = invoices;
         this.applyFilter();
         this.isLoading = false;
       },
-      error: (err) => {
-        console.log('error:', err);
+      error: () => {
         this.hasError = true;
         this.isLoading = false;
       },
@@ -90,9 +103,21 @@ export class DashboardComponent implements OnInit {
     this.applyFilter();
   }
 
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+
   getCount(filter: string): number {
     if (filter === 'All') return this.allInvoices.length;
     return this.allInvoices.filter((i) => i.status === filter).length;
+  }
+
+  getFilterLabel(filter: string): string {
+    return this.filterLabels[filter] ?? filter;
+  }
+
+  getStatusLabel(status: InvoiceStatus): string {
+    return this.statusLabels[status] ?? status;
   }
 
   selectInvoice(invoice: Invoice): void {

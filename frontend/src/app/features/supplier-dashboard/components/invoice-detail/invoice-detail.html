@@ -1,14 +1,18 @@
 <div class="overlay" (click)="close.emit()"></div>
 
-<div class="panel">
+<div class="panel detail-panel">
   <div class="panel-header">
-    <h2>Invoice Details</h2>
-    <button mat-icon-button (click)="close.emit()">✕</button>
+    <div>
+      <span class="panel-kicker">Document</span>
+      <h2>Invoice Details</h2>
+    </div>
+    <button mat-icon-button class="close-btn" aria-label="Close invoice details" (click)="close.emit()">
+      ×
+    </button>
   </div>
 
   <mat-divider />
 
-  <!-- Invoice Info -->
   <div class="detail-section">
     <div class="detail-row">
       <span class="label">Invoice Number</span>
@@ -32,13 +36,12 @@
     </div>
     <div class="detail-row">
       <span class="label">Status</span>
-      <span class="badge" [ngClass]="invoice.status.toLowerCase()">{{ invoice.status }}</span>
+      <span class="badge" [ngClass]="invoice.status.toLowerCase()">{{ getStatusLabel(invoice.status) }}</span>
     </div>
   </div>
 
   <mat-divider />
 
-  <!-- Eligibility Section -->
   <div class="detail-section">
     <h3>Early Payment Eligibility</h3>
 
@@ -46,10 +49,9 @@
       <mat-spinner diameter="32" />
     </div>
 
-    <div *ngIf="!isLoadingEligibility && eligibility">
-
+    <div *ngIf="!isLoadingEligibility && eligibility; else noEligibilityState">
       <div *ngIf="!eligibility.isEligible" class="ineligible-msg">
-        ⚠ {{ eligibility.reason }}
+        Warning: {{ eligibility.reason }}
       </div>
 
       <div *ngIf="eligibility.isEligible">
@@ -67,21 +69,27 @@
         </div>
       </div>
     </div>
+
+    <ng-template #noEligibilityState>
+      <div *ngIf="!isLoadingEligibility" class="ineligible-msg">
+        Warning: Unable to determine early payment eligibility right now.
+      </div>
+    </ng-template>
   </div>
 
-  <!-- Success Message -->
   <div *ngIf="submitSuccess" class="success-msg">
-    ✓ Early payment request submitted successfully.
+    Success: Early payment request submitted successfully.
   </div>
 
-  <!-- Error Message -->
   <div *ngIf="submitError" class="error-msg">
-    ✕ {{ submitError }}
+    Error: {{ submitError }}
   </div>
 
-  <!-- Confirmation Step -->
   <div *ngIf="showConfirmation" class="confirmation-box">
-    <p>You will receive <strong>MZN {{ eligibility?.disbursementAmount | number:'1.2-2' }}</strong> after a fee of <strong>MZN {{ eligibility?.fee | number:'1.2-2' }}</strong>. Confirm?</p>
+    <p>
+      You will receive <strong>MZN {{ eligibility?.disbursementAmount | number:'1.2-2' }}</strong> after a fee of
+      <strong>MZN {{ eligibility?.fee | number:'1.2-2' }}</strong>. Confirm?
+    </p>
     <div class="confirm-actions">
       <button mat-stroked-button (click)="cancelConfirmation()">Cancel</button>
       <button mat-flat-button color="primary" (click)="confirmRequest()" [disabled]="isSubmitting">
@@ -90,7 +98,6 @@
     </div>
   </div>
 
-  <!-- Request Button -->
   <div class="panel-footer" *ngIf="!submitSuccess && !showConfirmation">
     <button
       mat-flat-button

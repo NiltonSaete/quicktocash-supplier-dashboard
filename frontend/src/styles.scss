@@ -1,39 +1,104 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
 html {
   height: 100%;
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        theme-type: light,
+        primary: mat.$blue-palette,
+        tertiary: mat.$azure-palette,
       ),
-      typography: Roboto,
-      density: 0,
+      typography: Manrope,
+      density: -1,
     )
   );
+
+  --app-bg: #f4f7fc;
+  --app-bg-accent: #eef4ff;
+  --app-surface: #ffffff;
+  --app-surface-muted: #fbfcff;
+  --app-border: #dfe6f2;
+  --app-border-strong: #cdd7ea;
+  --app-text: #1f2a44;
+  --app-text-soft: #5f6c84;
+  --app-primary: #2563ff;
+  --app-primary-dark: #1744d5;
+  --app-primary-soft: #eef3ff;
+  --app-success: #22c55e;
+  --app-success-soft: #ddfbea;
+  --app-warning: #f59e0b;
+  --app-warning-soft: #ffefc8;
+  --app-danger: #ef4444;
+  --app-danger-soft: #ffe2e2;
+  --app-info: #6475ff;
+  --app-info-soft: #e3e8ff;
+  --app-shadow: 0 24px 60px rgba(31, 42, 68, 0.08);
+  --app-radius-xl: 28px;
+  --app-radius-lg: 22px;
+  --app-radius-md: 18px;
+  --mat-sys-primary: var(--app-primary);
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-surface: var(--app-surface);
+  --mat-sys-surface-container: var(--app-surface-muted);
+  --mat-sys-surface-container-high: #f7f9fe;
+  --mat-sys-surface-container-highest: #eef3fb;
+  --mat-sys-outline: var(--app-border);
+  --mat-sys-outline-variant: #e9eef7;
+  --mat-sys-on-surface: var(--app-text);
+  --mat-sys-on-surface-variant: var(--app-text-soft);
+  --mat-sys-secondary: #7b88a3;
+  --mat-sys-secondary-container: #edf2fb;
+  scroll-behavior: smooth;
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 255, 0.08), transparent 32%),
+    linear-gradient(180deg, #f8fbff 0%, var(--app-bg) 48%, #f6f7fb 100%);
+  color: var(--app-text);
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
   margin: 0;
-  height: 100%;
+  min-height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+.dashboard-shell .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.dashboard-shell .mat-mdc-text-field-wrapper {
+  background: var(--app-surface);
+}
+
+.dashboard-shell .mat-mdc-header-row {
+  background: transparent;
+}
+
+.dashboard-shell .mat-mdc-row:hover .mat-mdc-cell {
+  background: rgba(37, 99, 255, 0.02);
+}
+
+.detail-panel .mat-divider {
+  border-top-color: #edf1f7;
+}

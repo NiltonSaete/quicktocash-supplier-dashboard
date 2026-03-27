@@ -1,76 +1,140 @@
-<div class="dashboard-container">
-  <h1 class="dashboard-title">Supplier Dashboard</h1>
+<div class="dashboard-shell">
+  <section class="dashboard-container">
+    <header class="page-header">
+      <div class="page-copy">
+        <span class="page-kicker">Quick to Cash</span>
+        <h1 class="dashboard-title">Supplier Dashboard</h1>
+      </div>
+    </header>
 
-  <!-- Summary Strip -->
-  <div class="summary-strip">
-    @for (filter of filters; track filter) {
-      <button
-        [class.active]="activeFilter === filter"
-        (click)="setFilter(filter)"
-        class="filter-btn">
-        {{ filter }} ({{ getCount(filter) }})
-      </button>
+    <section class="toolbar-card">
+      <div class="toolbar-main">
+        <mat-form-field appearance="outline" class="search-field">
+          <span matTextPrefix class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path
+                d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.06-1.06-4.44-4.43A6.5 6.5 0 0 0 10.5 4Zm0 1.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" />
+            </svg>
+          </span>
+          <input
+            matInput
+            placeholder="Search by invoice number or supplier"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="applyFilter()" />
+        </mat-form-field>
+
+        <button type="button" mat-stroked-button class="filters-toggle" (click)="toggleFilters()">
+          <span class="button-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path
+                d="M4 6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5a1.5 1.5 0 0 1-.43 1.05L14 13.12V19l-4-2v-3.88L4.43 7.55A1.5 1.5 0 0 1 4 6.5Zm1.5 0 6 6V16.1l1 .5v-4.1l6-6h-13Z" />
+            </svg>
+          </span>
+          {{ showFilters ? 'Hide filters' : 'Filters' }}
+        </button>
+      </div>
+
+      @if (showFilters) {
+        <div class="summary-strip">
+          @for (filter of filters; track filter) {
+            <button
+              type="button"
+              [class.active]="activeFilter === filter"
+              (click)="setFilter(filter)"
+              class="filter-btn">
+              <span>{{ getFilterLabel(filter) }}</span>
+              <strong>{{ getCount(filter) }}</strong>
+            </button>
+          }
+        </div>
+      }
+    </section>
+
+    @if (isLoading) {
+      <div class="state-card center">
+        <mat-spinner diameter="44" />
+      </div>
+    } @else if (hasError) {
+      <div class="state-card center error">
+        Failed to load invoices. Please check the API is running.
+      </div>
+    } @else if (filteredInvoices.length === 0) {
+      <div class="state-card center empty">
+        No invoices match your current filter.
+      </div>
+    } @else {
+      <section class="table-card">
+        <table mat-table [dataSource]="filteredInvoices" class="invoice-table">
+          <ng-container matColumnDef="invoiceNumber">
+            <th mat-header-cell *matHeaderCellDef>Invoice No</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="primary-cell">
+                <span class="invoice-code">{{ row.invoiceNumber }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="supplierName">
+            <th mat-header-cell *matHeaderCellDef>Supplier</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="supplier-cell" [title]="row.supplierName">
+                {{ row.supplierName }}
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Amount</th>
+            <td mat-cell *matCellDef="let row" class="amount-cell">
+              MZN {{ row.amount | number:'1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="submittedDate">
+            <th mat-header-cell *matHeaderCellDef>Submitted</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.submittedDate | date:'mediumDate' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dueDate">
+            <th mat-header-cell *matHeaderCellDef>Due Date</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.dueDate | date:'mediumDate' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="badge" [ngClass]="row.status.toLowerCase()">
+                {{ getStatusLabel(row.status) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="actions-group">
+                <button
+                  type="button"
+                  mat-button
+                  class="view-btn"
+                  aria-label="View invoice details"
+                  (click)="selectInvoice(row)">
+                  View
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </section>
     }
-  </div>
-
-  <!-- Search -->
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Search by invoice number or supplier</mat-label>
-    <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" />
-  </mat-form-field>
-
-  @if (isLoading) {
-    <div class="center"><mat-spinner diameter="48" /></div>
-  } @else if (hasError) {
-    <div class="center error">Failed to load invoices. Please check the API is running.</div>
-  } @else if (filteredInvoices.length === 0) {
-    <div class="center empty">No invoices match your current filter.</div>
-  } @else {
-    <table mat-table [dataSource]="filteredInvoices" class="invoice-table">
-
-      <ng-container matColumnDef="invoiceNumber">
-        <th mat-header-cell *matHeaderCellDef>Invoice No</th>
-        <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="supplierName">
-        <th mat-header-cell *matHeaderCellDef>Supplier</th>
-        <td mat-cell *matCellDef="let row">{{ row.supplierName }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef>Amount</th>
-        <td mat-cell *matCellDef="let row">MZN {{ row.amount | number:'1.2-2' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="submittedDate">
-        <th mat-header-cell *matHeaderCellDef>Submitted</th>
-        <td mat-cell *matCellDef="let row">{{ row.submittedDate | date:'mediumDate' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="dueDate">
-        <th mat-header-cell *matHeaderCellDef>Due Date</th>
-        <td mat-cell *matCellDef="let row">{{ row.dueDate | date:'mediumDate' }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="badge" [ngClass]="row.status.toLowerCase()">{{ row.status }}</span>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let row">
-          <button mat-button color="primary" (click)="selectInvoice(row)">View</button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  }
+  </section>
 </div>
 
 @if (selectedInvoice) {
