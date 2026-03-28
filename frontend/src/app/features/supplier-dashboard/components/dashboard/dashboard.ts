@@ -10,6 +10,7 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 import { Invoice, InvoiceStatus } from '../../models/invoice.model';
 import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail';
+import { AlertService } from '../../../../core/services/alert.service';
 import { InvoiceService } from '../../services/invoice.service';
 
 @Component({
@@ -29,6 +30,7 @@ import { InvoiceService } from '../../services/invoice.service';
   styleUrls: ['./dashboard.scss'],
 })
 export class DashboardComponent {
+  private readonly alertService = inject(AlertService);
   private readonly invoiceService = inject(InvoiceService);
 
   readonly filters = ['All', 'Pending', 'Approved', 'Funded', 'Rejected'];
@@ -55,11 +57,14 @@ export class DashboardComponent {
       hasError: false,
     })),
     catchError(() =>
-      of({
-        invoices: [] as Invoice[],
-        isLoading: false,
-        hasError: true,
-      }),
+      {
+        this.alertService.error('Unable to load invoices right now. Please check the API and try again.');
+        return of({
+          invoices: [] as Invoice[],
+          isLoading: false,
+          hasError: true,
+        });
+      },
     ),
     startWith({
       invoices: [] as Invoice[],

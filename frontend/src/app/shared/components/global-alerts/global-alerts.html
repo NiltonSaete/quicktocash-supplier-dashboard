@@ -1,0 +1,15 @@
+@if (alertService.alerts$ | async; as alerts) {
+  <div class="alert-stack" aria-live="polite" aria-atomic="true">
+    @for (alert of alerts; track alert.id) {
+      <div class="alert-toast" [class]="alert.type">
+        <div class="alert-copy">
+          <strong>{{ alert.type | titlecase }}</strong>
+          <span>{{ alert.text }}</span>
+        </div>
+        <button type="button" class="alert-close" (click)="dismiss(alert.id)" aria-label="Dismiss alert">
+          x
+        </button>
+      </div>
+    }
+  </div>
+}

@@ -77,14 +77,6 @@
     </ng-template>
   </div>
 
-  <div *ngIf="submitSuccess" class="success-msg">
-    Success: Early payment request submitted successfully.
-  </div>
-
-  <div *ngIf="submitError" class="error-msg">
-    Error: {{ submitError }}
-  </div>
-
   <div *ngIf="showConfirmation" class="confirmation-box">
     <p>
       You will receive <strong>MZN {{ eligibility?.disbursementAmount | number:'1.2-2' }}</strong> after a fee of
@@ -98,7 +90,7 @@
     </div>
   </div>
 
-  <div class="panel-footer" *ngIf="!submitSuccess && !showConfirmation">
+  <div class="panel-footer" *ngIf="!showConfirmation">
     <button
       mat-flat-button
       color="primary"

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize, timeout } from 'rxjs/operators';
+import { AlertService } from '../../../../core/services/alert.service';
 import { Invoice } from '../../models/invoice.model';
 import { EarlyPaymentEligibility } from '../../models/early-payment.model';
 import { InvoiceService } from '../../services/invoice.service';
@@ -54,10 +55,11 @@ export class InvoiceDetailComponent {
   isLoadingEligibility = false;
   isSubmitting = false;
   showConfirmation = false;
-  submitSuccess = false;
-  submitError = '';
 
-  constructor(private invoiceService: InvoiceService) {}
+  constructor(
+    private invoiceService: InvoiceService,
+    private alertService: AlertService,
+  ) {}
 
   requestEarlyPayment(): void {
     this.showConfirmation = true;
@@ -68,13 +70,13 @@ export class InvoiceDetailComponent {
     this.invoiceService.submitEarlyPaymentRequest(this.invoice.invoiceId).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.submitSuccess = true;
         this.showConfirmation = false;
+        this.alertService.success('Early payment request submitted successfully.');
       },
       error: () => {
         this.isSubmitting = false;
-        this.submitError = 'Failed to submit request. Please try again.';
         this.showConfirmation = false;
+        this.alertService.error('Failed to submit request. Please try again.');
       }
     });
   }
@@ -91,8 +93,6 @@ export class InvoiceDetailComponent {
     const invoiceId = this.invoice?.invoiceId;
 
     this.showConfirmation = false;
-    this.submitSuccess = false;
-    this.submitError = '';
 
     console.log('[InvoiceDetail] loadEligibility called:', {
       invoiceId,
@@ -132,7 +132,9 @@ export class InvoiceDetailComponent {
             message: error.message,
             error: error.error,
           });
-          this.eligibility = this.createUnavailableEligibility(this.getEligibilityErrorMessage(error));
+          const message = this.getEligibilityErrorMessage(error);
+          this.eligibility = this.createUnavailableEligibility(message);
+          this.alertService.warning(message);
         }
       });
   }
