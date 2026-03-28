@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InvoiceDetailComponent } from './invoice-detail';
-import { InvoiceService } from '../../services/invoice.service';
-import { of } from 'rxjs';
+import { SupplierDashboardModule } from '../../supplier-dashboard.module';
 
 describe('InvoiceDetail', () => {
   let component: InvoiceDetailComponent;
@@ -9,16 +8,7 @@ describe('InvoiceDetail', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvoiceDetailComponent],
-      providers: [
-        {
-          provide: InvoiceService,
-          useValue: {
-            checkEligibility: () => of(null),
-            submitEarlyPaymentRequest: () => of(null),
-          },
-        },
-      ],
+      imports: [SupplierDashboardModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvoiceDetailComponent);

@@ -8,9 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { DashboardComponent } from './components/dashboard/dashboard';
+import { InvoiceDetailComponent } from './components/invoice-detail/invoice-detail';
 import { SupplierDashboardRoutingModule } from './supplier-dashboard-routing.module';
 
 @NgModule({
+  declarations: [DashboardComponent, InvoiceDetailComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -20,7 +22,6 @@ import { SupplierDashboardRoutingModule } from './supplier-dashboard-routing.mod
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    DashboardComponent,
     SupplierDashboardRoutingModule,
   ],
 })

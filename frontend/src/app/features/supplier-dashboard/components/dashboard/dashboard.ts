@@ -1,31 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
+import { FormControl } from '@angular/forms';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { catchError, map, shareReplay, startWith } from 'rxjs/operators';
 import { Invoice, InvoiceStatus } from '../../models/invoice.model';
-import { InvoiceDetailComponent } from '../invoice-detail/invoice-detail';
 import { AlertService } from '../../../../core/services/alert.service';
 import { InvoiceService } from '../../services/invoice.service';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatProgressSpinnerModule,
-    InvoiceDetailComponent,
-  ],
+  standalone: false,
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
 })
