@@ -19,8 +19,7 @@
           <input
             matInput
             placeholder="Search by invoice number or supplier"
-            [(ngModel)]="searchTerm"
-            (ngModelChange)="applyFilter()" />
+            [formControl]="searchControl" />
         </mat-form-field>
 
         <button type="button" mat-stroked-button class="filters-toggle" (click)="toggleFilters()">
