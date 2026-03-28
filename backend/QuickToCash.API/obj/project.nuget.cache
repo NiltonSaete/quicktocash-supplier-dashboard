@@ -1,12 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "FIPqjCBQRxU=",
-  "success": true,
+  "dgSpecHash": "Ykj6S/b+6hI=",
+  "success": false,
   "projectFilePath": "C:\\Users\\Nilton\\Desktop\\code\\quicktocash-supplier-dashboard\\backend\\QuickToCash.API\\QuickToCash.API.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Nilton\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.5\\microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
-    "C:\\Users\\Nilton\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
-    "C:\\Users\\Nilton\\.nuget\\packages\\scalar.aspnetcore\\2.13.15\\scalar.aspnetcore.2.13.15.nupkg.sha512"
-  ],
-  "logs": []
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.\r\n  Foi feita uma tentativa de acesso a uma socket de uma maneira que é proibida pelas permissões de acesso. (api.nuget.org:443)\r\n  Foi feita uma tentativa de acesso a uma socket de uma maneira que é proibida pelas permissões de acesso.",
+      "projectPath": "C:\\Users\\Nilton\\Desktop\\code\\quicktocash-supplier-dashboard\\backend\\QuickToCash.API\\QuickToCash.API.csproj",
+      "filePath": "C:\\Users\\Nilton\\Desktop\\code\\quicktocash-supplier-dashboard\\backend\\QuickToCash.API\\QuickToCash.API.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

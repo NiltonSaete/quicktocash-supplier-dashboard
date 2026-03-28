@@ -65,6 +65,53 @@
           No invoices match your current filter.
         </div>
       } @else {
+        <section class="mobile-invoice-list" aria-label="Invoices">
+          @for (row of vm.filteredInvoices; track row.invoiceId) {
+            <article class="invoice-card">
+              <div class="invoice-card-head">
+                <div class="primary-cell">
+                  <span class="card-label">Invoice</span>
+                  <span class="invoice-code">{{ row.invoiceNumber }}</span>
+                </div>
+                <span class="badge" [ngClass]="row.status.toLowerCase()">
+                  {{ getStatusLabel(row.status) }}
+                </span>
+              </div>
+
+              <div class="invoice-card-grid">
+                <div class="card-data">
+                  <span class="card-label">Supplier</span>
+                  <span>{{ row.supplierName }}</span>
+                </div>
+                <div class="card-data">
+                  <span class="card-label">Amount</span>
+                  <span class="amount-cell">MZN {{ row.amount | number:'1.2-2' }}</span>
+                </div>
+                <div class="card-data">
+                  <span class="card-label">Submitted</span>
+                  <span>{{ row.submittedDate | date:'mediumDate' }}</span>
+                </div>
+                <div class="card-data">
+                  <span class="card-label">Due Date</span>
+                  <span>{{ row.dueDate | date:'mediumDate' }}</span>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button
+                  type="button"
+                  mat-flat-button
+                  color="primary"
+                  class="card-view-btn"
+                  aria-label="View invoice details"
+                  (click)="selectInvoice(row)">
+                  View details
+                </button>
+              </div>
+            </article>
+          }
+        </section>
+
         <section class="table-card">
           <table mat-table [dataSource]="vm.filteredInvoices" class="invoice-table">
             <ng-container matColumnDef="invoiceNumber">

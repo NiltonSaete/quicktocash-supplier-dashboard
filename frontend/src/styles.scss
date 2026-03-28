@@ -15,7 +15,7 @@ html {
     )
   );
 
-  --app-bg: #f4f7fc;
+  --app-bg: #ffff;
   --app-bg-accent: #eef4ff;
   --app-surface: #ffffff;
   --app-surface-muted: #fbfcff;
@@ -55,9 +55,7 @@ html {
 
 body {
   color-scheme: light;
-  background:
-    radial-gradient(circle at top right, rgba(37, 99, 255, 0.08), transparent 32%),
-    linear-gradient(180deg, #f8fbff 0%, var(--app-bg) 48%, #f6f7fb 100%);
+  background: #ffff;
   color: var(--app-text);
   font-family: 'Manrope', 'Segoe UI', sans-serif;
   margin: 0;

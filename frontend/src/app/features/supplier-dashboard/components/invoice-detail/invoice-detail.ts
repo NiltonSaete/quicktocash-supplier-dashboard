@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { finalize, timeout } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { firstValueFrom, race, timer } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { AlertService } from '../../../../core/services/alert.service';
 import { Invoice } from '../../models/invoice.model';
 import { EarlyPaymentEligibility } from '../../models/early-payment.model';
@@ -12,7 +13,7 @@ import { InvoiceService } from '../../services/invoice.service';
   templateUrl: './invoice-detail.html',
   styleUrls: ['./invoice-detail.scss']
 })
-export class InvoiceDetailComponent {
+export class InvoiceDetailComponent implements OnChanges {
   readonly statusLabels: Record<string, string> = {
     Pending: 'Pending',
     Approved: 'Approved',
@@ -20,29 +21,8 @@ export class InvoiceDetailComponent {
     Rejected: 'Rejected',
   };
 
-  private _invoice!: Invoice;
-  private eligibilityLoadTimer: ReturnType<typeof setTimeout> | null = null;
-
-  @Input() set invoice(value: Invoice) {
-    this._invoice = value;
-    console.log('[InvoiceDetail] invoice input received:', {
-      invoiceId: value?.invoiceId,
-      invoiceNumber: value?.invoiceNumber,
-      status: value?.status,
-    });
-    if (this.eligibilityLoadTimer) {
-      clearTimeout(this.eligibilityLoadTimer);
-    }
-    this.eligibilityLoadTimer = setTimeout(() => {
-      this.eligibilityLoadTimer = null;
-      this.isLoadingEligibility = true;
-      this.loadEligibility();
-    }, 0);
-  }
-
-  get invoice(): Invoice {
-    return this._invoice;
-  }
+  private latestEligibilityRequestId = 0;
+  @Input({ required: true }) invoice!: Invoice;
 
   @Output() close = new EventEmitter<void>();
 
@@ -55,6 +35,16 @@ export class InvoiceDetailComponent {
     private invoiceService: InvoiceService,
     private alertService: AlertService,
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['invoice']?.currentValue) {
+      queueMicrotask(() => {
+        if (this.invoice === changes['invoice'].currentValue) {
+          void this.loadEligibility();
+        }
+      });
+    }
+  }
 
   requestEarlyPayment(): void {
     this.showConfirmation = true;
@@ -84,10 +74,12 @@ export class InvoiceDetailComponent {
     return this.statusLabels[status] ?? status;
   }
 
-  private loadEligibility(): void {
+  private async loadEligibility(): Promise<void> {
+    const requestId = ++this.latestEligibilityRequestId;
     const invoiceId = this.invoice?.invoiceId;
 
     this.showConfirmation = false;
+    this.isLoadingEligibility = true;
 
     console.log('[InvoiceDetail] loadEligibility called:', {
       invoiceId,
@@ -108,37 +100,64 @@ export class InvoiceDetailComponent {
       url: `http://localhost:5196/api/invoices/${invoiceId}/early-payment-eligibility`,
     });
 
-    this.invoiceService
-      .checkEligibility(invoiceId)
-      .pipe(timeout(8000))
-      .pipe(finalize(() => (this.isLoadingEligibility = false)))
-      .subscribe({
-        next: (result) => {
-          console.log('[InvoiceDetail] Eligibility response received:', {
-            invoiceId,
-            result,
-          });
-          this.eligibility = result;
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('[InvoiceDetail] Eligibility request failed:', {
-            invoiceId,
-            status: error.status,
-            message: error.message,
-            error: error.error,
-          });
-          const message = this.getEligibilityErrorMessage(error);
-          this.eligibility = this.createUnavailableEligibility(message);
-          this.alertService.warning(message);
-        }
+    try {
+      const result = await firstValueFrom(
+        race(
+          this.invoiceService.checkEligibility(invoiceId),
+          timer(8000).pipe(
+            mergeMap(() => {
+              throw new Error('The eligibility request timed out. Please try again.');
+            }),
+          ),
+        ),
+      );
+
+      if (requestId !== this.latestEligibilityRequestId) {
+        return;
+      }
+
+      console.log('[InvoiceDetail] Eligibility response received:', {
+        invoiceId,
+        result,
       });
+      this.eligibility = result;
+    } catch (error) {
+      if (requestId !== this.latestEligibilityRequestId) {
+        return;
+      }
+
+      const typedError = error as Error | HttpErrorResponse;
+      console.error('[InvoiceDetail] Eligibility request failed:', {
+        invoiceId,
+        status: typedError instanceof HttpErrorResponse ? typedError.status : undefined,
+        message: typedError.message,
+        error: typedError instanceof HttpErrorResponse ? typedError.error : typedError,
+      });
+      const message = this.getEligibilityErrorMessage(typedError);
+      this.eligibility = this.createUnavailableEligibility(message);
+      this.alertService.warning(message);
+    } finally {
+      if (requestId === this.latestEligibilityRequestId) {
+        this.isLoadingEligibility = false;
+      }
+    }
   }
 
-  private getEligibilityErrorMessage(error: HttpErrorResponse): string {
-    const apiErrors = error.error?.errors;
+  private getEligibilityErrorMessage(error: Error | HttpErrorResponse): string {
+    if (error instanceof HttpErrorResponse) {
+      const apiErrors = error.error?.errors;
 
-    if (Array.isArray(apiErrors) && apiErrors.length > 0) {
-      return apiErrors[0];
+      if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+        return apiErrors[0];
+      }
+
+      if (typeof error.error?.message === 'string' && error.error.message.trim()) {
+        return error.error.message;
+      }
+    }
+
+    if (error instanceof Error && error.message.trim()) {
+      return error.message;
     }
 
     return 'Unable to load early payment eligibility right now.';
