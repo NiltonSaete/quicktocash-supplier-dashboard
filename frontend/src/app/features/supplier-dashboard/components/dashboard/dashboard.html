@@ -34,104 +34,108 @@
       </div>
 
       @if (showFilters) {
-        <div class="summary-strip">
-          @for (filter of filters; track filter) {
-            <button
-              type="button"
-              [class.active]="activeFilter === filter"
-              (click)="setFilter(filter)"
-              class="filter-btn">
-              <span>{{ getFilterLabel(filter) }}</span>
-              <strong>{{ getCount(filter) }}</strong>
-            </button>
-          }
-        </div>
+        @if (vm$ | async; as vm) {
+          <div class="summary-strip">
+            @for (filter of filters; track filter) {
+              <button
+                type="button"
+                [class.active]="vm.activeFilter === filter"
+                (click)="setFilter(filter)"
+                class="filter-btn">
+                <span>{{ getFilterLabel(filter) }}</span>
+                <strong>{{ vm.counts[filter] }}</strong>
+              </button>
+            }
+          </div>
+        }
       }
     </section>
 
-    @if (isLoading) {
-      <div class="state-card center">
-        <mat-spinner diameter="44" />
-      </div>
-    } @else if (hasError) {
-      <div class="state-card center error">
-        Failed to load invoices. Please check the API is running.
-      </div>
-    } @else if (filteredInvoices.length === 0) {
-      <div class="state-card center empty">
-        No invoices match your current filter.
-      </div>
-    } @else {
-      <section class="table-card">
-        <table mat-table [dataSource]="filteredInvoices" class="invoice-table">
-          <ng-container matColumnDef="invoiceNumber">
-            <th mat-header-cell *matHeaderCellDef>Invoice No</th>
-            <td mat-cell *matCellDef="let row">
-              <div class="primary-cell">
-                <span class="invoice-code">{{ row.invoiceNumber }}</span>
-              </div>
-            </td>
-          </ng-container>
+    @if (vm$ | async; as vm) {
+      @if (vm.isLoading) {
+        <div class="state-card center">
+          <mat-spinner diameter="44" />
+        </div>
+      } @else if (vm.hasError) {
+        <div class="state-card center error">
+          Failed to load invoices. Please check the API is running.
+        </div>
+      } @else if (vm.filteredInvoices.length === 0) {
+        <div class="state-card center empty">
+          No invoices match your current filter.
+        </div>
+      } @else {
+        <section class="table-card">
+          <table mat-table [dataSource]="vm.filteredInvoices" class="invoice-table">
+            <ng-container matColumnDef="invoiceNumber">
+              <th mat-header-cell *matHeaderCellDef>Invoice No</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="primary-cell">
+                  <span class="invoice-code">{{ row.invoiceNumber }}</span>
+                </div>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="supplierName">
-            <th mat-header-cell *matHeaderCellDef>Supplier</th>
-            <td mat-cell *matCellDef="let row">
-              <div class="supplier-cell" [title]="row.supplierName">
-                {{ row.supplierName }}
-              </div>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="supplierName">
+              <th mat-header-cell *matHeaderCellDef>Supplier</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="supplier-cell" [title]="row.supplierName">
+                  {{ row.supplierName }}
+                </div>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef>Amount</th>
-            <td mat-cell *matCellDef="let row" class="amount-cell">
-              MZN {{ row.amount | number:'1.2-2' }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
+              <td mat-cell *matCellDef="let row" class="amount-cell">
+                MZN {{ row.amount | number:'1.2-2' }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="submittedDate">
-            <th mat-header-cell *matHeaderCellDef>Submitted</th>
-            <td mat-cell *matCellDef="let row">
-              {{ row.submittedDate | date:'mediumDate' }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="submittedDate">
+              <th mat-header-cell *matHeaderCellDef>Submitted</th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.submittedDate | date:'mediumDate' }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="dueDate">
-            <th mat-header-cell *matHeaderCellDef>Due Date</th>
-            <td mat-cell *matCellDef="let row">
-              {{ row.dueDate | date:'mediumDate' }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="dueDate">
+              <th mat-header-cell *matHeaderCellDef>Due Date</th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.dueDate | date:'mediumDate' }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let row">
-              <span class="badge" [ngClass]="row.status.toLowerCase()">
-                {{ getStatusLabel(row.status) }}
-              </span>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge" [ngClass]="row.status.toLowerCase()">
+                  {{ getStatusLabel(row.status) }}
+                </span>
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let row">
-              <div class="actions-group">
-                <button
-                  type="button"
-                  mat-button
-                  class="view-btn"
-                  aria-label="View invoice details"
-                  (click)="selectInvoice(row)">
-                  View
-                </button>
-              </div>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="actions-group">
+                  <button
+                    type="button"
+                    mat-button
+                    class="view-btn"
+                    aria-label="View invoice details"
+                    (click)="selectInvoice(row)">
+                    View
+                  </button>
+                </div>
+              </td>
+            </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </section>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </section>
+      }
     }
   </section>
 </div>
