@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuickToCash.API.DTOs;
 using QuickToCash.API.Services.Interfaces;
@@ -5,6 +6,7 @@ using QuickToCash.API.Services.Interfaces;
 namespace QuickToCash.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/invoices")]
     public class InvoicesController : ControllerBase
     {

@@ -33,3 +33,11 @@ C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\obj\Debug\net10.0\ref\QuickToCash.API.dll
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\obj\Debug\net10.0\QuickToCash.API.sourcelink.json
 C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\QuickToCash.API\bin\Debug\net10.0\Scalar.AspNetCore.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\appsettings.Development.json
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\appsettings.json
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\QuickToCash.API.staticwebassets.endpoints.json
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\QuickToCash.API.exe
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\QuickToCash.API.deps.json
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\QuickToCash.API.runtimeconfig.json
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\QuickToCash.API.dll
+C:\Users\Nilton\Desktop\code\quicktocash-supplier-dashboard\backend\build-auth-check\QuickToCash.API.pdb
