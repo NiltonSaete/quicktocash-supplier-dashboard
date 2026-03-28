@@ -22,6 +22,7 @@ export class InvoiceDetailComponent implements OnChanges {
   };
 
   private latestEligibilityRequestId = 0;
+  private eligibilityLoadTimeoutId: ReturnType<typeof setTimeout> | null = null;
   @Input({ required: true }) invoice!: Invoice;
 
   @Output() close = new EventEmitter<void>();
@@ -38,11 +39,16 @@ export class InvoiceDetailComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['invoice']?.currentValue) {
-      queueMicrotask(() => {
+      if (this.eligibilityLoadTimeoutId !== null) {
+        clearTimeout(this.eligibilityLoadTimeoutId);
+      }
+
+      this.eligibilityLoadTimeoutId = setTimeout(() => {
+        this.eligibilityLoadTimeoutId = null;
         if (this.invoice === changes['invoice'].currentValue) {
           void this.loadEligibility();
         }
-      });
+      }, 0);
     }
   }
 
@@ -81,24 +87,13 @@ export class InvoiceDetailComponent implements OnChanges {
     this.showConfirmation = false;
     this.isLoadingEligibility = true;
 
-    console.log('[InvoiceDetail] loadEligibility called:', {
-      invoiceId,
-      hasInvoice: !!this.invoice,
-    });
-
     if (!invoiceId) {
-      console.warn('[InvoiceDetail] Missing invoiceId, skipping eligibility request.');
       this.eligibility = this.createUnavailableEligibility('Invoice details are incomplete.');
       this.isLoadingEligibility = false;
       return;
     }
 
     this.eligibility = null;
-
-    console.log('[InvoiceDetail] Starting eligibility request:', {
-      invoiceId,
-      url: `http://localhost:5196/api/invoices/${invoiceId}/early-payment-eligibility`,
-    });
 
     try {
       const result = await firstValueFrom(
@@ -116,10 +111,6 @@ export class InvoiceDetailComponent implements OnChanges {
         return;
       }
 
-      console.log('[InvoiceDetail] Eligibility response received:', {
-        invoiceId,
-        result,
-      });
       this.eligibility = result;
     } catch (error) {
       if (requestId !== this.latestEligibilityRequestId) {
@@ -127,12 +118,6 @@ export class InvoiceDetailComponent implements OnChanges {
       }
 
       const typedError = error as Error | HttpErrorResponse;
-      console.error('[InvoiceDetail] Eligibility request failed:', {
-        invoiceId,
-        status: typedError instanceof HttpErrorResponse ? typedError.status : undefined,
-        message: typedError.message,
-        error: typedError instanceof HttpErrorResponse ? typedError.error : typedError,
-      });
       const message = this.getEligibilityErrorMessage(typedError);
       this.eligibility = this.createUnavailableEligibility(message);
       this.alertService.warning(message);
