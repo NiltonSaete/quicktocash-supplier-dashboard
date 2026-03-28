@@ -8,9 +8,11 @@
 
 .panel {
   position: fixed;
-  inset: 16px 16px 16px auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: min(460px, calc(100vw - 32px));
-  height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px);
   border: 1px solid rgba(223, 230, 242, 0.9);
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.96);
@@ -190,8 +192,11 @@
 @media (max-width: 640px) {
   .panel {
     inset: 8px;
+    top: auto;
+    left: auto;
+    transform: none;
     width: auto;
-    height: calc(100vh - 16px);
+    max-height: calc(100vh - 16px);
     border-radius: 22px;
   }
 

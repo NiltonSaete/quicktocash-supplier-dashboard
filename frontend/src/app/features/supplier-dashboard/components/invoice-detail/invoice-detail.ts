@@ -1,5 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize, timeout } from 'rxjs/operators';
 import { Invoice } from '../../models/invoice.model';
 import { EarlyPaymentEligibility } from '../../models/early-payment.model';
@@ -7,7 +11,8 @@ import { InvoiceService } from '../../services/invoice.service';
 
 @Component({
   selector: 'app-invoice-detail',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatDividerModule, MatProgressSpinnerModule],
   templateUrl: './invoice-detail.html',
   styleUrls: ['./invoice-detail.scss']
 })
